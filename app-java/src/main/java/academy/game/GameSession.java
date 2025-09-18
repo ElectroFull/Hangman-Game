@@ -1,6 +1,5 @@
 package academy.game;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class GameSession {
@@ -12,20 +11,15 @@ public class GameSession {
 
     public GameSession(String answer, int maxMistakes) {
         if (answer == null || (answer = norm(answer)).length() < 2)
-            throw new IllegalArgumentException("Загадываемое слово не должно быть короче 2 символов!");
+            throw new IllegalArgumentException("Загадываемое слово не должно быть короче 2-x символов!");
         this.answer = answer;
         this.maxMistakes = maxMistakes;
     }
 
     public String masked(){
         StringBuilder maskedStr = new StringBuilder();
-        for (int x : answer.chars().toArray()){
-            char c = (char) x;
-            if (guessed.contains(c)){
-                maskedStr.append(c);
-            }else{
-                maskedStr.append('*');
-            }
+        for (char c : answer.toCharArray()){
+            maskedStr.append(guessed.contains(c) ? c : '*');
         }
         return maskedStr.toString();
     }
@@ -39,7 +33,7 @@ public class GameSession {
         if (exists < 0) {
             mistakes += (isNewGuess ? 1 : 0);
         }
-        return new GuessResult(masked(), mistakes, maxMistakes, won(), lost(), hit(exists, isNewGuess), false)
+        return new GuessResult(masked(), mistakes, maxMistakes, won(), lost(), hit(exists, isNewGuess), false);
     }
 
     public int getMistakes() {
