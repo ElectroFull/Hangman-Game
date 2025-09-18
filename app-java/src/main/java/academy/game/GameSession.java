@@ -1,11 +1,13 @@
 package academy.game;
 
+import java.util.Set;
 import java.util.HashSet;
+
 
 public class GameSession {
     private final String answer;
     private final int maxMistakes;
-    private final HashSet<Character> guessed = new HashSet<>();
+    private final Set<Character> guessed = new HashSet<>();
     private int mistakes = 0;
 
 
