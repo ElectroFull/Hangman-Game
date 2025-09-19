@@ -1,7 +1,7 @@
 package academy.game;
 
 public enum Difficulty {
-    EASY(9),
+    EASY(8),
     MEDIUM(6),
     HARD(3);
 

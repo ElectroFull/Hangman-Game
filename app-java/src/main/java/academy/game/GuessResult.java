@@ -6,7 +6,4 @@ public record GuessResult(String masked,
                           boolean won,
                           boolean lost,
                           boolean hit, boolean InvalidInput) {
-    public static void Result(){
-
-    }
 }
