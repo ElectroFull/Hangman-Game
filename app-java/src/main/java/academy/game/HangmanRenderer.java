@@ -87,7 +87,7 @@ public class HangmanRenderer {
     private double rate;
 
     HangmanRenderer(Difficulty difficulty) {
-        rate = (double) hangman.length / difficulty.getMaxMistakes();
+        rate = (double) (hangman.length - 1) / difficulty.getMaxMistakes();
     }
     public String render(int mistakes){
         return hangman[(int)Math.round(mistakes * rate)];
