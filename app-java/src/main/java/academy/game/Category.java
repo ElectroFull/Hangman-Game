@@ -4,5 +4,9 @@ public enum Category {
     ANIMALS,
     FRUITS,
     FAMILY,
-    TECHNOLOGY
+    TECHNOLOGY;
+
+    static Category getRandomCategory(){
+        return Category.values()[(int)(Math.random() * Category.values().length)];
+    }
 }

@@ -38,12 +38,21 @@ public class GameSession {
         return new GuessResult(masked(), mistakes, maxMistakes, won(), lost(), hit(exists, isNewGuess), false);
     }
 
+
     public int getMistakes() {
         return mistakes;
     }
 
     public void setMistakes(int mistakes) {
         this.mistakes = mistakes;
+    }
+
+    private GameStatus getStatus(boolean won, boolean lost, boolean hit, boolean invalidInput){
+        if (invalidInput) return GameStatus.INVALID_INPUT;
+        if (won) return GameStatus.WON;
+        if (lost) return GameStatus.LOST;
+        if (hit) return GameStatus.HIT;
+        return GameStatus.MISS;
     }
 
     private boolean won(){

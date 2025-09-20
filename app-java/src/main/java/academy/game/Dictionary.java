@@ -21,22 +21,12 @@ public class Dictionary {
     }
 
     public static String getRandomWord(Category category, Difficulty difficulty){
-        Category chosenCategory = (category != null) ? category : getRandomCategory();
-        Difficulty chosenDifficulty = (difficulty != null) ? difficulty : getRandomDifficulty();
-        List<String> wordList = words.get(chosenCategory).get(chosenDifficulty);
+        List<String> wordList = words.get(category).get(difficulty);
         return wordList.get((int)(Math.random() * wordList.size()));
     }
 
     public static String getHint(String word){
         return hints.get(word);
-    }
-
-    public static Category getRandomCategory(){
-        return Category.values()[(int)(Math.random() * Category.values().length)];
-    }
-
-    public static Difficulty getRandomDifficulty(){
-        return Difficulty.values()[(int)(Math.random() * Difficulty.values().length)];
     }
 }
 // TODO: Add logic for hints mechanism in Application.java

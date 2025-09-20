@@ -1,6 +1,8 @@
 package academy;
 
+import academy.game.Category;
 import academy.game.Dictionary;
+import academy.game.Difficulty;
 import academy.game.GameSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -45,9 +47,20 @@ public class Application implements Runnable {
     private File configPath;
 
     @Option(
-        names = {"-d", "--dict"},
+        names = {"-d", "--dictionary"},
         description = "Path to YAML dictionary file")
     private File dictionaryPath;
+
+    @Option(
+        names = {"-l", "--level"},
+        description = "Set the difficulty of the game: ${COMPLETION-CANDIDATES}")
+    private Difficulty difficulty;
+
+    @Option(
+        names = {"-t", "--topic"},
+        description = "Set the word's category: ${COMPLETION-CANDIDATES}")
+    private Category category;
+
 
     public static void main(String[] args) {
         int exitCode = new CommandLine(new Application()).setCaseInsensitiveEnumValuesAllowed(true).execute(args);
