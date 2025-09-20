@@ -31,7 +31,7 @@ public class DictionaryLoader {
                 List <String> wordsOnly = new ArrayList<>();
                 for (var entry: difficulty.getValue()){
                     wordsOnly.add(entry.word().toLowerCase().trim()); // normalization
-                    hints.put(entry.word().toLowerCase().trim(), entry.hint());
+                    hints.put(entry.word().toLowerCase().trim(), entry.hint()); // hint for UI only
                 }
                 wordsCollector.put(difficulty.getKey(), wordsOnly);
             }

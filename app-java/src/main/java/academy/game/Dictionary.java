@@ -12,6 +12,9 @@ public class Dictionary {
     private static final Map<String, String> hints = new HashMap<>();
 
     public static void loadYaml(File yamlfile) throws IOException {
+        if (yamlfile == null){
+            yamlfile = new File("resources/dictionary.yaml");
+        }
         DictionaryLoader.ProcessedDictionary data = DictionaryLoader.load(yamlfile);
         words.putAll(data.words());
         hints.putAll(data.hints());

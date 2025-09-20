@@ -1,5 +1,7 @@
 package academy;
 
+import academy.game.Dictionary;
+import academy.game.GameSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -19,7 +21,7 @@ import static academy.AcceptanceTestExample.TEST_CASES_DUMMY;
 import static academy.AcceptanceTestExample.UNKNOWN_TEST_WORD;
 import static java.util.Objects.nonNull;
 
-@Command(name = "Application Example", version = "Example 1.0", mixinStandardHelpOptions = true)
+@Command(name = "Hangman Game", version = "Hangman 1.0", mixinStandardHelpOptions = true)
 public class Application implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
@@ -42,8 +44,13 @@ public class Application implements Runnable {
         description = "Path to YAML config file")
     private File configPath;
 
+    @Option(
+        names = {"-d", "--dict"},
+        description = "Path to YAML dictionary file")
+    private File dictionaryPath;
+
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new Application()).execute(args);
+        int exitCode = new CommandLine(new Application()).setCaseInsensitiveEnumValuesAllowed(true).execute(args);
         System.exit(exitCode);
     }
 
@@ -57,6 +64,7 @@ public class Application implements Runnable {
 
         } else {
             LOGGER.atInfo().log("Interactive mode enabled");
+
         }
     }
 
