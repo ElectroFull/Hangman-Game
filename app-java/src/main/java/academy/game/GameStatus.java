@@ -5,5 +5,7 @@ public enum GameStatus {
     LOST,
     HIT,
     INVALID_INPUT,
+    REPETITION,
+    HINT,
     MISS
 }

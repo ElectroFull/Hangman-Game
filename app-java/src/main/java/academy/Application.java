@@ -1,69 +1,64 @@
 package academy;
 
+import static java.util.Objects.nonNull;
+
 import academy.game.Category;
-import academy.game.Dictionary;
 import academy.game.Difficulty;
-import academy.game.GameSession;
+import academy.game.InteractiveMode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Map;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import static academy.AcceptanceTestExample.TEST_CASES_DUMMY;
-import static academy.AcceptanceTestExample.UNKNOWN_TEST_WORD;
-import static java.util.Objects.nonNull;
 
 @Command(name = "Hangman Game", version = "Hangman 1.0", mixinStandardHelpOptions = true)
 public class Application implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
     private static final ObjectReader YAML_READER =
-        new ObjectMapper(new YAMLFactory()).findAndRegisterModules().reader();
+            new ObjectMapper(new YAMLFactory()).findAndRegisterModules().reader();
     private static final Predicate<String[]> IS_TESTING_MODE = words -> nonNull(words) && words.length == 2;
 
     @Option(
-        names = {"-s", "--font-size"},
-        description = "Font size")
+            names = {"-s", "--font-size"},
+            description = "Font size")
     int fontSize;
 
-    @Parameters(
-        paramLabel = "<word>",
-        description = "Words pair for testing mode")
+    @Parameters(paramLabel = "<word>", description = "Words pair for testing mode")
     private String[] words;
 
     @Option(
-        names = {"-c", "--config"},
-        description = "Path to YAML config file")
+            names = {"-c", "--config"},
+            description = "Path to YAML config file")
     private File configPath;
 
     @Option(
-        names = {"-d", "--dictionary"},
-        description = "Path to YAML dictionary file")
+            names = {"-d", "--dictionary"},
+            description = "Path to YAML dictionary file")
     private File dictionaryPath;
 
     @Option(
-        names = {"-l", "--level"},
-        description = "Set the difficulty of the game: ${COMPLETION-CANDIDATES}")
+            names = {"-l", "--level"},
+            description = "Set the difficulty of the game: ${COMPLETION-CANDIDATES}")
     private Difficulty difficulty;
 
     @Option(
-        names = {"-t", "--topic"},
-        description = "Set the word's category: ${COMPLETION-CANDIDATES}")
+            names = {"-t", "--topic"},
+            description = "Set the word's category: ${COMPLETION-CANDIDATES}")
     private Category category;
 
-
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new Application()).setCaseInsensitiveEnumValuesAllowed(true).execute(args);
+        int exitCode = new CommandLine(new Application())
+                .setCaseInsensitiveEnumValuesAllowed(true)
+                .execute(args);
         System.exit(exitCode);
     }
 
@@ -77,7 +72,8 @@ public class Application implements Runnable {
 
         } else {
             LOGGER.atInfo().log("Interactive mode enabled");
-
+            InteractiveMode theHangmanGame = new InteractiveMode(dictionaryPath, difficulty, category);
+            theHangmanGame.run();
         }
     }
 
@@ -92,5 +88,4 @@ public class Application implements Runnable {
             throw new UncheckedIOException(e);
         }
     }
-
 }

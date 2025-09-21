@@ -11,8 +11,8 @@ public enum Difficulty {
         this.maxMistakes = maxMistakes;
     }
 
-    static Difficulty getRandomDifficulty(){
-        return Difficulty.values()[(int)(Math.random() * Difficulty.values().length)];
+    static Difficulty getRandomDifficulty() {
+        return Difficulty.values()[(int) (Math.random() * Difficulty.values().length)];
     }
 
     int getMaxMistakes() {

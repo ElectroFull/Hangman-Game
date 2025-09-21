@@ -74,7 +74,7 @@ public class HangmanRenderer {
             |
         =====
     """,
-         """
+        """
          +--+
          |  |
          @  |
@@ -89,7 +89,8 @@ public class HangmanRenderer {
     HangmanRenderer(Difficulty difficulty) {
         rate = (double) (hangman.length - 1) / difficulty.getMaxMistakes();
     }
-    public String render(int mistakes){
-        return hangman[(int)Math.round(mistakes * rate)];
+
+    public String render(int mistakes) {
+        return hangman[(int) Math.round(mistakes * rate)];
     }
 }
