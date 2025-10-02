@@ -53,9 +53,11 @@ class NonInteractiveModeTest {
     @ParameterizedTest
     @MethodSource("getWords")
     void testRunnerNegative(String word){
-        String wrongWord = word.replace(word.charAt(0), '5');
+        int position = 0;
+
+        String wrongWord = word.replace(word.charAt(position), '5');
         NonInteractiveMode testGame = new NonInteractiveMode(word, wrongWord);
-        String masked = maskedWordHelper(word, 0);
+        String masked = maskedWordHelper(word, position);
 
         testGame.run();
 
