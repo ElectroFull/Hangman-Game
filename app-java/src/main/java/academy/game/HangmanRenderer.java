@@ -9,15 +9,6 @@ public class HangmanRenderer {
 
 
 
-
-        """,
-        """
-
-
-
-
-
-
         =====
     """,
         """
@@ -60,7 +51,7 @@ public class HangmanRenderer {
          +--+
          |  |
          @  |
-        /|\\|
+        /|\\ |
             |
             |
         =====
@@ -69,7 +60,7 @@ public class HangmanRenderer {
          +--+
          |  |
          @  |
-        /|\\|
+        /|\\ |
         /   |
             |
         =====
@@ -78,19 +69,20 @@ public class HangmanRenderer {
          +--+
          |  |
          @  |
-        /|\\|
-        / \\|
+        /|\\ |
+        / \\ |
             |
         =====
     """
     };
-    private double rate;
+    private final double rate;
 
-    HangmanRenderer(Difficulty difficulty) {
+    public HangmanRenderer(final Difficulty difficulty) {
         rate = (double) (hangman.length - 1) / difficulty.getMaxMistakes();
     }
 
     public String render(int mistakes) {
+        if (mistakes == 0) return "";
         return hangman[(int) Math.round(mistakes * rate)];
     }
 }

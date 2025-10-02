@@ -8,7 +8,7 @@ public class NonInteractiveMode {
     private final String answer;
     private final String guess;
 
-        public NonInteractiveMode(final String answer, final String guess){
+    public NonInteractiveMode(final String answer, final String guess){
         Objects.requireNonNull(answer, "Угадываемое слово не должно быть пустым");
         Objects.requireNonNull(guess, "Результат угадывания не должен быть пустым");
         if (answer.length() != guess.length()){

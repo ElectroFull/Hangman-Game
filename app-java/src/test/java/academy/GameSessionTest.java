@@ -1,23 +1,21 @@
 package academy;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import academy.game.Difficulty;
 import academy.game.GameSession;
 import academy.game.GameStatus;
 import academy.game.GuessResult;
 import org.instancio.Instancio;
-import static org.instancio.Select.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.instancio.Select.allStrings;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
 class GameSessionTest {
 
@@ -166,6 +164,8 @@ class GameSessionTest {
             .limit(10);
     }
 
+
+    // Открывает все буквы соответствующие текущей в position
     static String maskedWordHelper(String word, int position){
         return word.toLowerCase().chars()
             .mapToObj(ch -> (char) ch)
