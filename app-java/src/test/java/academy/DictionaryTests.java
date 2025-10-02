@@ -1,16 +1,16 @@
 package academy;
 
-import academy.game.Category;
-import academy.game.Dictionary;
-import academy.game.Difficulty;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import java.io.IOException;
-import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
+import academy.game.Category;
+import academy.game.Dictionary;
+import academy.game.Difficulty;
+import java.io.IOException;
+import java.nio.file.Path;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class DictionaryTests {
     @BeforeAll
@@ -50,8 +50,8 @@ class DictionaryTests {
         String computerHint = Dictionary.getHint("компьютер");
         assertNotNull(computerHint);
         assertEquals("Электронное устройство для обработки данных", computerHint);
-
     }
+
     @Test
     void testAllCategoriesAndDifficultiesNotNull() {
         assertNotNull(Dictionary.getRandomWord(Category.ANIMALS, Difficulty.EASY));

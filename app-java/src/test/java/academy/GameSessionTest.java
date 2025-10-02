@@ -1,26 +1,27 @@
 package academy;
 
-import academy.game.Difficulty;
-import academy.game.GameSession;
-import academy.game.GameStatus;
-import academy.game.GuessResult;
-import org.instancio.Instancio;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.MethodSource;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.instancio.Select.allStrings;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
+import academy.game.Difficulty;
+import academy.game.GameSession;
+import academy.game.GameStatus;
+import academy.game.GuessResult;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.instancio.Instancio;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
 class GameSessionTest {
 
     @Test
-    void testValidation(){
+    void testValidation() {
         assertThrows(IllegalArgumentException.class, () -> new GameSession(null, Difficulty.HARD));
         assertThrows(IllegalArgumentException.class, () -> new GameSession("h", Difficulty.HARD));
         assertThrows(IllegalArgumentException.class, () -> new GameSession("  ", Difficulty.HARD));
@@ -28,7 +29,7 @@ class GameSessionTest {
 
     @ParameterizedTest()
     @MethodSource("getWords")
-    void testHitCondition(String word){
+    void testHitCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
         int position = 0;
         String masked = maskedWordHelper(word, position);
@@ -38,8 +39,6 @@ class GameSessionTest {
         assertEquals(GameStatus.HIT, result.status());
         assertEquals(masked, result.masked());
     }
-
-
 
     @ParameterizedTest()
     @MethodSource("getWords")
@@ -54,7 +53,7 @@ class GameSessionTest {
 
     @ParameterizedTest()
     @MethodSource("getWords")
-    void testInvalidInputCondition(String word){
+    void testInvalidInputCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
 
         GuessResult result = game.guess("abc");
@@ -71,7 +70,7 @@ class GameSessionTest {
 
     @ParameterizedTest()
     @MethodSource("getWords")
-    void testRepetitionCondition(String word){
+    void testRepetitionCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
         int position = 0;
         String masked = maskedWordHelper(word, position);
@@ -85,7 +84,7 @@ class GameSessionTest {
 
     @ParameterizedTest()
     @MethodSource("getWords")
-    void testHintCondition(String word){
+    void testHintCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
 
         GuessResult result = game.guess("?");
@@ -95,11 +94,11 @@ class GameSessionTest {
 
     @ParameterizedTest()
     @MethodSource("getWords")
-    void testWinCondition(String word){
+    void testWinCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
         GuessResult result = null;
 
-        for (char x : word.toCharArray()){
+        for (char x : word.toCharArray()) {
             result = game.guess(String.valueOf(x));
         }
 
@@ -110,7 +109,7 @@ class GameSessionTest {
 
     @ParameterizedTest()
     @MethodSource("getWords")
-    void testLoseCondition(String word){
+    void testLoseCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
         game.guess("0");
         game.guess("1");
@@ -150,27 +149,25 @@ class GameSessionTest {
         assertEquals(GameStatus.REPETITION, result.status());
     }
 
-
-
-    static Stream<String> getWords(){
+    static Stream<String> getWords() {
         return Instancio.of(String.class)
-            .generate(allStrings(), gen -> gen.string()
-                .minLength(3)
-                .maxLength(10)
-                .allowEmpty(false)
-                .lowerCase())
-            .withSeed(1234)
-            .stream()
-            .limit(10);
+                .generate(allStrings(), gen -> gen.string()
+                        .minLength(3)
+                        .maxLength(10)
+                        .allowEmpty(false)
+                        .lowerCase())
+                .withSeed(1234)
+                .stream()
+                .limit(10);
     }
 
-
     // Открывает все буквы соответствующие текущей в position
-    static String maskedWordHelper(String word, int position){
-        return word.toLowerCase().chars()
-            .mapToObj(ch -> (char) ch)
-            .map(ch -> ch == word.charAt(position) ? ch : '*')
-            .map(String::valueOf)
-            .collect(Collectors.joining());
+    static String maskedWordHelper(String word, int position) {
+        return word.toLowerCase()
+                .chars()
+                .mapToObj(ch -> (char) ch)
+                .map(ch -> ch == word.charAt(position) ? ch : '*')
+                .map(String::valueOf)
+                .collect(Collectors.joining());
     }
 }

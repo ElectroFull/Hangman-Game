@@ -1,17 +1,17 @@
 package academy.game;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class InteractiveMode {
 
-    private final File externalDictionaryPath;
+    private final Path externalDictionaryPath;
     private final Difficulty difficulty;
     private final Category category;
 
-    public InteractiveMode(File externalDictionaryPath, Difficulty difficulty, Category category) {
+    public InteractiveMode(final Path externalDictionaryPath, final Difficulty difficulty, final Category category) {
         this.externalDictionaryPath = externalDictionaryPath;
         this.difficulty = Objects.requireNonNullElse(difficulty, Difficulty.getRandomDifficulty());
         this.category = Objects.requireNonNullElse(category, Category.getRandomCategory());
@@ -28,12 +28,14 @@ public class InteractiveMode {
         final GameSession game = new GameSession(answer, difficulty);
         final HangmanRenderer hangmanRenderer = new HangmanRenderer(difficulty);
 
+        // Visualization
+        printHeader(new GuessResult(game.masked(), 0, difficulty.getMaxMistakes(), null), hangmanRenderer);
         System.out.println("Добро пожаловать в игру \"Виселица\"!");
 
         final Scanner in = new Scanner(System.in);
         while (true) {
             System.out.println("Введите букву (или '?' для подсказки): ");
-            String choice = in.nextLine().trim();
+            String choice = in.nextLine().strip();
             GuessResult result = game.guess(choice);
             clearScreen();
             printHeader(result, hangmanRenderer);
@@ -43,25 +45,18 @@ public class InteractiveMode {
                 case HINT -> System.out.println("Подсказка: " + Dictionary.getHint(answer));
                 case REPETITION -> System.out.printf("Вы уже называли букву: %s. Попробуйте снова.\n", choice);
                 case WON -> {
-                    System.out.println("Вы победили: Загадываемое слово было " + answer);
+                    System.out.println("Вы победили: Загадываемое слово - " + answer);
                     return;
                 }
                 case LOST -> {
-                    System.out.println("Вы проиграли: Загадываемое слово было " + answer);
+                    System.out.println("Вы проиграли: Загадываемое слово - " + answer);
                     return;
                 }
-                case HIT -> {
-                    System.out.printf("Отлично! Буква: %s существует.\n", choice);
+                case HIT -> System.out.printf("Отлично! Буква: %s существует.\n", choice);
+                case MISS ->
                     System.out.printf(
-                            "Текущее слово: %-30s %s\n", result.masked(), hangmanRenderer.render(result.mistakes()));
-                }
-                case MISS -> {
-                    System.out.printf(
-                            "Буквы %s в слове нет. Осталось попыток: %d",
+                            "Буквы %s в слове нет. Осталось попыток: %d\n",
                             choice, result.maxMistakes() - result.mistakes());
-                    System.out.printf(
-                            "Текущее слово: %-30s %s\n", result.masked(), hangmanRenderer.render(result.mistakes()));
-                }
             }
         }
     }
@@ -75,7 +70,7 @@ public class InteractiveMode {
     }
 
     private static void clearScreen() {
-        System.out.print("\033[H\033[2J");
+        System.out.print("\033[H\033[2J\033[3J");
         System.out.flush();
     }
 }

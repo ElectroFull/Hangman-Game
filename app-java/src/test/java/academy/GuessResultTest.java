@@ -1,9 +1,10 @@
 package academy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import academy.game.GameStatus;
 import academy.game.GuessResult;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GuessResultTest {
     @Test

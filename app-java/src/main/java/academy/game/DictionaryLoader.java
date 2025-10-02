@@ -3,8 +3,8 @@ package academy.game;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,13 +15,15 @@ public class DictionaryLoader {
 
     private static final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
+    private DictionaryLoader() {
+        throw new UnsupportedOperationException();
+    }
+
     public record ProcessedDictionary(Map<Category, Map<Difficulty, List<String>>> words, Map<String, String> hints) {}
 
-    public static ProcessedDictionary load(File file) throws IOException {
-        TypeReference<Map<Category, Map<Difficulty, List<WordEntry>>>> typeRef =
-                new TypeReference<Map<Category, Map<Difficulty, List<WordEntry>>>>() {};
-        Map<Category, Map<Difficulty, List<WordEntry>>> rawData = mapper.readValue(file, typeRef);
-
+    public static ProcessedDictionary load(final Path file) throws IOException {
+        TypeReference<Map<Category, Map<Difficulty, List<WordEntry>>>> typeRef = new TypeReference<>() {};
+        Map<Category, Map<Difficulty, List<WordEntry>>> rawData = mapper.readValue(file.toFile(), typeRef);
         Map<Category, Map<Difficulty, List<String>>> words = new HashMap<>();
         Map<String, String> hints = new HashMap<>();
 
@@ -30,8 +32,8 @@ public class DictionaryLoader {
             for (var difficulty : category.getValue().entrySet()) {
                 List<String> wordsOnly = new ArrayList<>();
                 for (var entry : difficulty.getValue()) {
-                    wordsOnly.add(entry.word().toLowerCase().trim()); // normalization
-                    hints.put(entry.word().toLowerCase().trim(), entry.hint()); // hint for UI only
+                    wordsOnly.add(entry.word().toLowerCase().strip()); // normalization
+                    hints.put(entry.word().toLowerCase().strip(), entry.hint()); // hint for UI only
                 }
                 wordsCollector.put(difficulty.getKey(), wordsOnly);
             }

@@ -1,10 +1,11 @@
 package academy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import academy.game.Difficulty;
 import academy.game.HangmanRenderer;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class HangmanRendererTest {
     @Test

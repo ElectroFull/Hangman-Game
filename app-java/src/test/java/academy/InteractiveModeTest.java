@@ -1,20 +1,19 @@
 package academy;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
+
 import academy.game.Category;
 import academy.game.Difficulty;
 import academy.game.InteractiveMode;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class InteractiveModeTest {
     private PrintStream originalStdOut;
@@ -23,7 +22,7 @@ class InteractiveModeTest {
     private ByteArrayOutputStream baosErrOut;
 
     @BeforeEach
-    void setUp(){ // Для перехвата стандартного вывода
+    void setUp() { // Для перехвата стандартного вывода
         originalStdOut = System.out;
         originalErrorOut = System.err;
         baosStdOut = new ByteArrayOutputStream();
@@ -33,17 +32,14 @@ class InteractiveModeTest {
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         System.setOut(originalStdOut);
         System.setErr(originalErrorOut);
     }
 
     @Test
-    void testInvalidDictionary(){
-        InteractiveMode game = new InteractiveMode(
-            Path.of("abcde.yaml"),
-            Difficulty.MEDIUM,
-            Category.FRUITS);
+    void testInvalidDictionary() {
+        InteractiveMode game = new InteractiveMode(Path.of("abcde.yaml"), Difficulty.MEDIUM, Category.FRUITS);
 
         game.run();
 
@@ -59,7 +55,7 @@ class InteractiveModeTest {
     }
 
     @Test
-    void testAllConditionsExceptLost(){
+    void testAllConditionsExceptLost() {
         InputStream originalIn = System.in;
         try {
             String guess = "?\nabc\na\na\na\nк\nо\nт";
@@ -68,15 +64,13 @@ class InteractiveModeTest {
             System.setIn(baosStdIn);
 
             InteractiveMode game = new InteractiveMode(
-                Path.of("src/test/resources/test-dictionary.yaml"),
-                Difficulty.EASY,
-                Category.ANIMALS
-            );
+                    Path.of("src/test/resources/test-dictionary.yaml"), Difficulty.EASY, Category.ANIMALS);
 
             game.run();
 
             String output = baosStdOut.toString();
-            assertTrue(output.contains("Категория: ANIMALS  |  Сложность: EASY  |  Попыток осталось: 8  |  Кол-во ошибок: 0"));
+            assertTrue(output.contains(
+                    "Категория: ANIMALS  |  Сложность: EASY  |  Попыток осталось: 8  |  Кол-во ошибок: 0"));
             assertTrue(output.contains("Буквы a в слове нет. Осталось попыток: 7\n"));
             assertTrue(output.contains("Вы уже называли букву: a. Попробуйте снова.\n"));
             assertTrue(output.contains("Подсказка: Домашнее животное, любит молоко"));
@@ -89,7 +83,7 @@ class InteractiveModeTest {
     }
 
     @Test
-    void testLoseCondition(){
+    void testLoseCondition() {
         InputStream originalIn = System.in;
         try {
             String guess = "0\n1\n2\n3\n4\n5\n6\n7";
@@ -98,10 +92,7 @@ class InteractiveModeTest {
             System.setIn(baosStdIn);
 
             InteractiveMode game = new InteractiveMode(
-                Path.of("src/test/resources/test-dictionary.yaml"),
-                Difficulty.EASY,
-                Category.ANIMALS
-            );
+                    Path.of("src/test/resources/test-dictionary.yaml"), Difficulty.EASY, Category.ANIMALS);
 
             game.run();
 
@@ -111,5 +102,4 @@ class InteractiveModeTest {
             System.setIn(originalIn);
         }
     }
-
 }
