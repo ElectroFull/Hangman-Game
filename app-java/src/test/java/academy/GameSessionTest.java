@@ -6,21 +6,16 @@ import academy.game.Difficulty;
 import academy.game.GameSession;
 import academy.game.GameStatus;
 import academy.game.GuessResult;
-import org.assertj.core.internal.Diff;
 import org.instancio.Instancio;
 import static org.instancio.Select.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
-import org.instancio.settings.Keys;
-import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import java.util.List;
-import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
