@@ -6,7 +6,7 @@ public enum Category {
     FAMILY,
     TECHNOLOGY;
 
-    static Category getRandomCategory() {
+    public static Category getRandomCategory() {
         return Category.values()[(int) (Math.random() * Category.values().length)];
     }
 }

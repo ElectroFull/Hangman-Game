@@ -15,7 +15,7 @@ public enum Difficulty {
         return Difficulty.values()[(int) (Math.random() * Difficulty.values().length)];
     }
 
-    int getMaxMistakes() {
+    public int getMaxMistakes() {
         return maxMistakes;
     }
 }

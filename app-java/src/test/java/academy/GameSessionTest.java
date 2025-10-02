@@ -17,6 +17,7 @@ import org.instancio.settings.Keys;
 import org.instancio.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.random.RandomGenerator;
@@ -67,6 +68,12 @@ class GameSessionTest {
 
         assertEquals(GameStatus.INVALID_INPUT, result.status());
         assertEquals("*".repeat(word.length()), result.masked());
+
+        result = game.guess(" ");
+        assertEquals(GameStatus.INVALID_INPUT, result.status());
+
+        result = game.guess("");
+        assertEquals(GameStatus.INVALID_INPUT, result.status());
     }
 
     @ParameterizedTest()
@@ -98,11 +105,14 @@ class GameSessionTest {
     void testWinCondition(String word){
         GameSession game = new GameSession(word, Difficulty.HARD);
         GuessResult result = null;
+
         for (char x : word.toCharArray()){
             result = game.guess(String.valueOf(x));
         }
+
         assertNotNull(result);
         assertEquals(GameStatus.WON, result.status());
+        assertEquals(0, result.mistakes());
     }
 
     @ParameterizedTest()
@@ -113,7 +123,41 @@ class GameSessionTest {
         game.guess("1");
         GuessResult result = game.guess("2");
         assertEquals(GameStatus.LOST, result.status());
+        assertEquals(Difficulty.HARD.getMaxMistakes(), result.mistakes());
     }
+
+    @ParameterizedTest
+    @EnumSource(Difficulty.class)
+    void testDifficulties(Difficulty difficulty) {
+        GameSession game = new GameSession("hellohi", difficulty);
+
+        int maxMistakes = difficulty.getMaxMistakes();
+
+        for (int i = 0; i < maxMistakes - 1; i++) {
+            GuessResult result = game.guess(String.valueOf(i));
+            assertThat(result.status()).isNotEqualTo(GameStatus.LOST);
+        }
+
+        GuessResult finalResult = game.guess("9");
+
+        assertThat(finalResult.mistakes()).isEqualTo(difficulty.getMaxMistakes());
+        assertEquals(GameStatus.LOST, finalResult.status());
+    }
+
+    @Test
+    void testCaseInsensitiveGuess() {
+        GameSession game = new GameSession("Hellohi", Difficulty.HARD);
+
+        GuessResult result = game.guess("H");
+
+        assertEquals(GameStatus.HIT, result.status());
+
+        result = game.guess("h");
+
+        assertEquals(GameStatus.REPETITION, result.status());
+    }
+
+
 
     static Stream<String> getWords(){
         return Instancio.of(String.class)
