@@ -9,11 +9,11 @@ public class GameSession {
     private final Set<Character> guessed = new HashSet<>();
     private int mistakes = 0;
 
-    public GameSession(String answer, int maxMistakes) {
+    public GameSession(String answer, final Difficulty maxMistakes) {
         if (answer == null || (answer = norm(answer)).length() < 2)
             throw new IllegalArgumentException("Загадываемое слово не должно быть короче 2-x символов!");
         this.answer = answer;
-        this.maxMistakes = maxMistakes;
+        this.maxMistakes = maxMistakes.getMaxMistakes();
     }
 
     public String masked() {

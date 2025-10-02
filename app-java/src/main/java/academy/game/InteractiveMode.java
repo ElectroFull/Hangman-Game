@@ -25,7 +25,7 @@ public class InteractiveMode {
             return;
         }
         final String answer = Dictionary.getRandomWord(category, difficulty);
-        final GameSession game = new GameSession(answer, difficulty.getMaxMistakes());
+        final GameSession game = new GameSession(answer, difficulty);
         final HangmanRenderer hangmanRenderer = new HangmanRenderer(difficulty);
 
         System.out.println("Добро пожаловать в игру \"Виселица\"!");
