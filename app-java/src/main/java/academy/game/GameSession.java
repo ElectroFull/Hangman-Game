@@ -70,6 +70,6 @@ public class GameSession {
     }
 
     private static String norm(String s) {
-        return s.toLowerCase().trim();
+        return s.toLowerCase().strip();
     }
 }
