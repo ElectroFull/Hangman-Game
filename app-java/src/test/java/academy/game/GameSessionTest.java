@@ -1,4 +1,4 @@
-package academy;
+package academy.game;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.instancio.Select.allStrings;
@@ -6,10 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
-import academy.game.Difficulty;
-import academy.game.GameSession;
-import academy.game.GameStatus;
-import academy.game.GuessResult;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.instancio.Instancio;
@@ -25,6 +21,7 @@ class GameSessionTest {
         assertThrows(IllegalArgumentException.class, () -> new GameSession(null, Difficulty.HARD));
         assertThrows(IllegalArgumentException.class, () -> new GameSession("h", Difficulty.HARD));
         assertThrows(IllegalArgumentException.class, () -> new GameSession("  ", Difficulty.HARD));
+        assertThrows(IllegalArgumentException.class, () -> new GameSession("abcd9", Difficulty.EASY));
     }
 
     @ParameterizedTest()
@@ -45,7 +42,7 @@ class GameSessionTest {
     void testMissCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
 
-        GuessResult result = game.guess(String.valueOf('0'));
+        GuessResult result = game.guess(String.valueOf('字'));
 
         assertEquals(GameStatus.MISS, result.status());
         assertEquals("*".repeat(word.length()), result.masked());
@@ -65,6 +62,12 @@ class GameSessionTest {
         assertEquals(GameStatus.INVALID_INPUT, result.status());
 
         result = game.guess("");
+        assertEquals(GameStatus.INVALID_INPUT, result.status());
+
+        result = game.guess("+");
+        assertEquals(GameStatus.INVALID_INPUT, result.status());
+
+        result = game.guess("5");
         assertEquals(GameStatus.INVALID_INPUT, result.status());
     }
 
@@ -111,9 +114,9 @@ class GameSessionTest {
     @MethodSource("getWords")
     void testLoseCondition(String word) {
         GameSession game = new GameSession(word, Difficulty.HARD);
-        game.guess("0");
-        game.guess("1");
-        GuessResult result = game.guess("2");
+        game.guess("字");
+        game.guess("水");
+        GuessResult result = game.guess("日");
         assertEquals(GameStatus.LOST, result.status());
         assertEquals(Difficulty.HARD.getMaxMistakes(), result.mistakes());
     }
@@ -125,12 +128,14 @@ class GameSessionTest {
 
         int maxMistakes = difficulty.getMaxMistakes();
 
+        char[] chineseChars = {'人', '水', '火', '山', '日', '月', '木', '天', '中', '爱', '学', '国', '家', '你', '好'};
+
         for (int i = 0; i < maxMistakes - 1; i++) {
-            GuessResult result = game.guess(String.valueOf(i));
+            GuessResult result = game.guess(String.valueOf(chineseChars[i]));
             assertThat(result.status()).isNotEqualTo(GameStatus.LOST);
         }
 
-        GuessResult finalResult = game.guess("9");
+        GuessResult finalResult = game.guess(String.valueOf(chineseChars[maxMistakes]));
 
         assertThat(finalResult.mistakes()).isEqualTo(difficulty.getMaxMistakes());
         assertEquals(GameStatus.LOST, finalResult.status());

@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class GameSession {
     private final String answer;
+    private final char[] answerCharArray;
     private final int maxMistakes;
     private final Set<Character> guessed = new HashSet<>();
     private int mistakes = 0;
@@ -12,13 +13,21 @@ public class GameSession {
     public GameSession(String answer, final Difficulty maxMistakes) {
         if (answer == null || (answer = norm(answer)).length() < 2)
             throw new IllegalArgumentException("Загадываемое слово не должно быть короче 2-x символов!");
+        if (!answer.codePoints().allMatch(Character::isAlphabetic)) {
+            throw new IllegalArgumentException("Загадываемое слово должно состоять из букв!");
+        }
         this.answer = answer;
+        this.answerCharArray = answer.toCharArray();
         this.maxMistakes = maxMistakes.getMaxMistakes();
+    }
+
+    public GuessResult initialState() {
+        return new GuessResult(masked(), 0, maxMistakes, null);
     }
 
     public String masked() {
         StringBuilder maskedStr = new StringBuilder();
-        for (char c : answer.toCharArray()) {
+        for (char c : answerCharArray) {
             maskedStr.append(guessed.contains(c) ? c : '*');
         }
         return maskedStr.toString();
@@ -26,31 +35,35 @@ public class GameSession {
 
     public GuessResult guess(String input) {
         if (input == null || (input = norm(input)).length() != 1) {
-            return new GuessResult(masked(), mistakes, maxMistakes, getStatus(false, false, false, true, false));
+            return new GuessResult(masked(), mistakes, maxMistakes, GameStatus.INVALID_INPUT);
         }
         if (input.equals("?")) {
             return new GuessResult(masked(), mistakes, maxMistakes, GameStatus.HINT);
         }
-
-        boolean isNewGuess = guessed.add(input.charAt(0));
-        int exists = answer.indexOf(input.charAt(0));
-        if (exists < 0) {
-            mistakes += (isNewGuess ? 1 : 0);
+        if (!Character.isLetter((int) input.charAt(0))) {
+            return new GuessResult(masked(), mistakes, maxMistakes, GameStatus.INVALID_INPUT);
         }
-        return new GuessResult(
-                masked(),
-                mistakes,
-                maxMistakes,
-                getStatus(won(), lost(), hit(exists, isNewGuess), false, repetition(isNewGuess)));
-    }
+        // чтобы нельзя было мутировать mistakes в случае окончания игры.
+        if (won()) {
+            return new GuessResult(masked(), mistakes, maxMistakes, GameStatus.WON);
+        }
+        if (lost()) {
+            return new GuessResult(masked(), mistakes, maxMistakes, GameStatus.LOST);
+        }
+        boolean isNewGuess = guessed.add(input.charAt(0));
 
-    private GameStatus getStatus(boolean won, boolean lost, boolean hit, boolean invalidInput, boolean repetition) {
-        if (invalidInput) return GameStatus.INVALID_INPUT;
-        if (won) return GameStatus.WON;
-        if (lost) return GameStatus.LOST;
-        if (hit) return GameStatus.HIT;
-        if (repetition) return GameStatus.REPETITION;
-        return GameStatus.MISS;
+        if (repetition(isNewGuess)) {
+            return new GuessResult(masked(), mistakes, maxMistakes, GameStatus.REPETITION);
+        }
+
+        int exists = answer.indexOf(input.charAt(0));
+
+        if (hit(exists)) {
+            return new GuessResult(masked(), mistakes, maxMistakes, won() ? GameStatus.WON : GameStatus.HIT);
+        }
+        // miss
+        ++mistakes;
+        return new GuessResult(masked(), mistakes, maxMistakes, lost() ? GameStatus.LOST : GameStatus.MISS);
     }
 
     private boolean won() {
@@ -61,8 +74,8 @@ public class GameSession {
         return mistakes >= maxMistakes;
     }
 
-    private boolean hit(int existence, boolean isNewGuess) {
-        return existence >= 0 && isNewGuess;
+    private boolean hit(int existence) {
+        return existence >= 0;
     }
 
     private boolean repetition(boolean isNewGuess) {

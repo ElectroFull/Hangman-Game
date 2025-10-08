@@ -1,11 +1,10 @@
-package academy;
+package academy.game;
 
 import static org.instancio.Select.allStrings;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
-import academy.game.NonInteractiveMode;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.stream.Collectors;

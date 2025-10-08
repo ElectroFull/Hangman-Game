@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class NonInteractiveMode {
     private final String answer;
-    private final String guess;
+    private final char[] guessCharArray;
 
     public NonInteractiveMode(final String answer, final String guess) {
         Objects.requireNonNull(answer, "Угадываемое слово не должно быть пустым");
@@ -15,16 +15,17 @@ public class NonInteractiveMode {
             throw new IllegalArgumentException("Слова должны быть одинаковой длины!");
         }
         this.answer = answer;
-        this.guess = guess;
+        this.guessCharArray = guess.toCharArray();
     }
 
     public void run() {
         final Set<Character> guessSet = new HashSet<>();
-        for (char x : guess.toCharArray()) {
+        for (char x : guessCharArray) {
             guessSet.add(x);
         }
         StringBuilder masked = new StringBuilder();
-        for (char x : answer.toCharArray()) {
+        char[] answerCharArray = answer.toCharArray();
+        for (char x : answerCharArray) {
             if (guessSet.contains(x)) {
                 masked.append(x);
             } else {

@@ -24,12 +24,12 @@ public class InteractiveMode {
             System.err.println("Не удалось загрузить словарь: " + e.getMessage());
             return;
         }
-        final String answer = Dictionary.getRandomWord(category, difficulty);
-        final GameSession game = new GameSession(answer, difficulty);
+        final WordEntry answer = Dictionary.getRandomWordEntry(category, difficulty);
+        final GameSession game = new GameSession(answer.word(), difficulty);
         final HangmanRenderer hangmanRenderer = new HangmanRenderer(difficulty);
 
         // Visualization
-        printHeader(new GuessResult(game.masked(), 0, difficulty.getMaxMistakes(), null), hangmanRenderer);
+        printHeader(game.initialState(), hangmanRenderer);
         System.out.println("Добро пожаловать в игру \"Виселица\"!");
 
         final Scanner in = new Scanner(System.in);
@@ -42,14 +42,14 @@ public class InteractiveMode {
 
             switch (result.status()) {
                 case INVALID_INPUT -> System.out.println("Пожалуйста, введите только одну букву.");
-                case HINT -> System.out.println("Подсказка: " + Dictionary.getHint(answer));
+                case HINT -> System.out.println("Подсказка: " + answer.hint());
                 case REPETITION -> System.out.printf("Вы уже называли букву: %s. Попробуйте снова.\n", choice);
                 case WON -> {
-                    System.out.println("Вы победили: Загадываемое слово - " + answer);
+                    System.out.println("Вы победили: Загадываемое слово - " + answer.word());
                     return;
                 }
                 case LOST -> {
-                    System.out.println("Вы проиграли: Загадываемое слово - " + answer);
+                    System.out.println("Вы проиграли: Загадываемое слово - " + answer.word());
                     return;
                 }
                 case HIT -> System.out.printf("Отлично! Буква: %s существует.\n", choice);
