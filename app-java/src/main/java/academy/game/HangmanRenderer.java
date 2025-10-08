@@ -78,11 +78,14 @@ public class HangmanRenderer {
     private final double rate;
 
     public HangmanRenderer(final Difficulty difficulty) {
-        rate = (double) (hangman.length - 1) / difficulty.getMaxMistakes();
+        rate = (double) hangman.length / difficulty.getMaxMistakes();
     }
 
     public String render(int mistakes) {
+        if (mistakes < 0) throw new IllegalArgumentException();
         if (mistakes == 0) return "";
-        return hangman[(int) Math.round(mistakes * rate)];
+        int frame = (int) Math.round(mistakes * rate) - 1;
+        if (frame >= hangman.length) throw new IllegalArgumentException();
+        return hangman[frame];
     }
 }

@@ -5,31 +5,36 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 public class Dictionary {
-    private static final Map<Category, Map<Difficulty, List<String>>> words = new HashMap<>();
-    private static final Map<String, String> hints = new HashMap<>();
+    private static final Map<Category, Map<Difficulty, List<WordEntry>>> words = new HashMap<>();
+    private static Supplier<Double> rng = Math::random; // для тестинга
 
     private Dictionary() {
         throw new UnsupportedOperationException();
+    }
+
+    // для детерминированности в тестах
+    static void setRandom(Supplier<Double> supplier) { // package private
+        Objects.requireNonNull(supplier);
+        rng = supplier;
+    }
+
+    static void resetRandom() {
+        rng = Math::random;
     }
 
     public static void loadYaml(Path yamlfile) throws IOException {
         if (yamlfile == null) {
             yamlfile = Path.of("src/main/resources/dictionary.yaml");
         }
-        DictionaryLoader.ProcessedDictionary data = DictionaryLoader.load(yamlfile);
-        words.putAll(data.words());
-        hints.putAll(data.hints());
+        words.putAll(DictionaryLoader.load(yamlfile));
     }
 
-    public static String getRandomWord(final Category category, final Difficulty difficulty) {
-        List<String> wordList = words.get(category).get(difficulty);
-        return wordList.get((int) (Math.random() * wordList.size()));
-    }
-
-    public static String getHint(final String word) {
-        return hints.get(word);
+    public static WordEntry getRandomWordEntry(final Category category, final Difficulty difficulty) {
+        List<WordEntry> wordList = words.get(category).get(difficulty);
+        return wordList.get((int) (rng.get() * wordList.size()));
     }
 }
-// TODO: Add logic for hints mechanism in Application.java

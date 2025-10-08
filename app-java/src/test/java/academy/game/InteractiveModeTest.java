@@ -1,11 +1,8 @@
-package academy;
+package academy.game;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
-import academy.game.Category;
-import academy.game.Difficulty;
-import academy.game.InteractiveMode;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -86,7 +83,7 @@ class InteractiveModeTest {
     void testLoseCondition() {
         InputStream originalIn = System.in;
         try {
-            String guess = "0\n1\n2\n3\n4\n5\n6\n7";
+            String guess = "中\n天\n木\n月\n日\n山\n水\n人";
 
             ByteArrayInputStream baosStdIn = new ByteArrayInputStream(guess.getBytes());
             System.setIn(baosStdIn);

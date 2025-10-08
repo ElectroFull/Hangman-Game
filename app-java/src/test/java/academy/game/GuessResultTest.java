@@ -1,9 +1,7 @@
-package academy;
+package academy.game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import academy.game.GameStatus;
-import academy.game.GuessResult;
 import org.junit.jupiter.api.Test;
 
 class GuessResultTest {
