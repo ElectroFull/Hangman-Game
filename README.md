@@ -35,6 +35,7 @@ To build the project and verify that everything works correctly, run:
 ```bash
 cd app-java
 mvn clean verify
+mvn clean package build
 ```
 
 For Unix (Linux, macOS, Cygwin, WSL):
